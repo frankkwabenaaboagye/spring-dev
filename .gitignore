@@ -1,0 +1,24 @@
+# Ignore all ZIP files
+*.zip
+
+# IntelliJ IDEA specific files
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+*.class
+
+# Spring Boot specific
+target/
+*.log
+*.jar
+*.war
+*.tar.gz
+
+# Maven and Gradle build directories
+.mvn/
+build/
+*.gradle
+.gradle/
+
