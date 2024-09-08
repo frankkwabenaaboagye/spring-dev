@@ -2,6 +2,7 @@ package frankaboagye.letscode;
 
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.Driver;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
@@ -14,7 +15,21 @@ import java.util.Set;
 public class LetscodeApplication {
 
     public static void main(String[] args) throws Exception {
-        var customerService = new DefaultCustomerService();
+
+        var dataSource = new DriverManagerDataSource(
+                "jdbc:postgresql://localhost/postgres",
+                "postgres",
+                "password"
+
+        ); // not an actual connection pool
+
+        dataSource.setDriverClassName(Driver.class.getName());
+
+        var template = new JdbcTemplate(dataSource);
+        template.afterPropertiesSet();
+
+
+        var customerService = new DefaultCustomerService(template);
 
         var allCustomers = customerService.allCustomers();
 
@@ -30,20 +45,10 @@ public class LetscodeApplication {
 @Slf4j
 class DefaultCustomerService {
 
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
 
-    DefaultCustomerService() {
-
-        var dataSource = new DriverManagerDataSource(
-                "jdbc:postgresql://localhost/postgres",
-                "postgres",
-                "password"
-
-        ); // not an actual connection pool
-
-        dataSource.setDriverClassName(Driver.class.getName());
-
-        this.dataSource = dataSource;
+    DefaultCustomerService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
 
